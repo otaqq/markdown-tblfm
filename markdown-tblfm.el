@@ -40,8 +40,9 @@
 ;;   <!-- TBLFM: $3=($2*4000) -->
 ;;   <!-- TBLFM: @>$2=sum(@I..@-1) :: @>$3=sum(@I..@-1) -->
 ;;
-;; M-x markdown-tblfm-recalculate fills in the table at point;
-;; M-x markdown-tblfm-recalculate-buffer does every table in the buffer.
+;; M-x markdown-tblfm-recalculate fills in the table at point; with a
+;; prefix argument (C-u), or with M-x markdown-tblfm-recalculate-buffer,
+;; every table in the buffer is recalculated.
 ;;
 ;; The formulas are evaluated by the Org table spreadsheet: the table is
 ;; copied into a temporary Org buffer, the formulas are translated
@@ -291,12 +292,16 @@ Return a list of strings, one per line."
         t))))
 
 ;;;###autoload
-(defun markdown-tblfm-recalculate ()
+(defun markdown-tblfm-recalculate (&optional all)
   "Evaluate the TBLFM formulas of the Markdown table at point.
-Point may be on a table row or on a formula line below the table."
-  (interactive)
-  (unless (markdown-tblfm--recalculate-at-point)
-    (user-error "No TBLFM formulas below this table")))
+Point may be on a table row or on a formula line below the table.
+With prefix argument ALL, recalculate every table in the buffer, as
+`markdown-tblfm-recalculate-buffer' does."
+  (interactive "P")
+  (if all
+      (call-interactively #'markdown-tblfm-recalculate-buffer)
+    (unless (markdown-tblfm--recalculate-at-point)
+      (user-error "No TBLFM formulas below this table"))))
 
 ;;;###autoload
 (defun markdown-tblfm-recalculate-buffer ()

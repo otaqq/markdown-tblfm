@@ -262,6 +262,38 @@ Text.
 | 1 |
 "))))
 
+(ert-deftest markdown-tblfm-test-prefix-recalculates-buffer ()
+  (markdown-tblfm-test--with "Text.
+
+| a |
+| --- |
+| 1 |
+|   |
+<!-- TBLFM: @>$1=(@-1+1) -->
+
+| b |
+| --- |
+| 10 |
+|   |
+<!-- TBLFM: @>$1=(@-1*2) -->
+"
+    (markdown-tblfm-recalculate '(4))
+    (should (equal (buffer-string)
+                   "Text.
+
+| a   |
+| --- |
+| 1   |
+| 2   |
+<!-- TBLFM: @>$1=(@-1+1) -->
+
+| b   |
+| --- |
+| 10  |
+| 20  |
+<!-- TBLFM: @>$1=(@-1*2) -->
+"))))
+
 (ert-deftest markdown-tblfm-test-translate ()
   (should (equal (markdown-tblfm--translate '("@>$2=sum(@I..@-1)"))
                  "@>$2=vsum(@I..@-1);N"))

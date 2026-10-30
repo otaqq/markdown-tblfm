@@ -34,14 +34,24 @@ Or put `markdown-tblfm.el` on your `load-path` and `(require 'markdown-tblfm)`.
 
 | Command | What it does |
 | ------- | ------------ |
-| `M-x markdown-tblfm-recalculate` | Recalculate the table at point (point may also be on a formula line) |
+| `M-x markdown-tblfm-recalculate` | Recalculate the table at point (point may also be on a formula line). With `C-u`, recalculate every table in the buffer |
 | `M-x markdown-tblfm-recalculate-buffer` | Recalculate every table with formulas in the buffer |
 
-No key is bound by default. For example, with `markdown-mode`:
+No key is bound by default. For example:
 
 ```elisp
-(with-eval-after-load 'markdown-mode
-  (define-key markdown-mode-map (kbd "C-c =") #'markdown-tblfm-recalculate))
+(global-set-key (kbd "C-c =") #'markdown-tblfm-recalculate)
+```
+
+Then `C-c =` recalculates the table at point and `C-u C-c =` every table in the
+buffer.
+
+To recalculate every table each time a Markdown file is saved:
+
+```elisp
+(add-hook 'markdown-mode-hook
+          (lambda ()
+            (add-hook 'before-save-hook #'markdown-tblfm-recalculate-buffer nil t)))
 ```
 
 The table is reformatted on recalculation: columns are padded to the same
