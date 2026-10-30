@@ -176,7 +176,7 @@ ROWS is a list whose elements are lists of cells or the symbol `hline'."
             (org-table-to-lisp))))
 
 (defun markdown-tblfm--clean-number (new old)
-  "Return NEW without the trailing dot Calc adds to whole floats.
+  "Return NEW without the trailing dot of a whole float from Calc.
 Only cells whose value changed from OLD are touched."
   (if (and (not (equal new old))
            (string-match "\\`\\(-?[0-9]+\\)\\.\\'" new))
